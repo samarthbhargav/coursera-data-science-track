@@ -1,7 +1,5 @@
-# outcome-of-care-measures.csv
-
-best <- function(state, oc) {
-  
+rankhospital <- function(state, oc, num = "best") {
+    
     getIndex <- function(outcome_name) {
         outcome_indices[match(outcome_name, outcomes)]
     }
@@ -28,8 +26,14 @@ best <- function(state, oc) {
     }
     
     col_num <- getIndex(oc)
-    outcome_arr <- outcome[, col_num]
-    min <- min(outcome_arr, na.rm=T)
-    min_index <- which(outcome_arr == min)
-    sort(as.character(outcome[min_index, 2]))
+    #outcome_arr <- outcome[, col_num]
+    sorted <- outcome[ order(outcome[,col_num], outcome[,2]), ]
+    notisna <- !is.na(sorted[,col_num])
+    if(num == "best") {
+        sorted[1,2]
+    } else if (num == "worst") {
+        sorted[which.max(sorted[,col_num]),2]
+    } else {
+        sorted[num,2]
+    }
 }
